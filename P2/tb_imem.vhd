@@ -1,0 +1,70 @@
+--tb_imem.vhd
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+use work.arrays.all;
+use ieee.numeric_std.all;
+
+entity tb_imem is
+  generic(gCLK_Hper : time := 50 ns);
+end tb_imem;
+
+architecture behavioral of tb_imem is
+  constant cCLK_Per : time := gCLK_HPER * 2;
+
+  component mem is
+    generic(
+      depth_exp_of_2 	: integer := 10;
+      mif_filename 	: string := "bubblesort.mif");
+    port (
+      address	: IN STD_LOGIC_VECTOR (depth_exp_of_2-1 DOWNTO 0) := (OTHERS => '0');
+      byteena	: IN STD_LOGIC_VECTOR (3 DOWNTO 0) := (OTHERS => '1');
+      clock	: IN STD_LOGIC := '1';
+      data	: IN STD_LOGIC_VECTOR (31 DOWNTO 0) := (OTHERS => '0');
+      wren	: IN STD_LOGIC := '0';
+      q		: OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
+    );    
+  end component;
+
+signal s_address : std_logic_vector(10 - 1 downto 0); --depth_exp_of_2
+signal s_clock : std_logic;
+signal s_q : std_logic_vector (31 downto 0);
+signal s_store : array32_bit(20 downto 0);
+
+
+begin
+  DUT: mem
+    port map(
+      address => s_address,
+      byteena => "1111",
+      clock => s_clock,
+--      data => s_data,
+      wren => '0',
+      q => s_q
+    );
+  
+  P_CLK: process
+  begin
+    s_clock <= '0';
+    wait for gCLK_HPER;
+    s_clock <= '1';
+    wait for gCLK_HPER;
+  end process;
+  
+  TB: process
+    begin
+
+    s_address <= "1111111111";
+    wait for cCLK_PER;    
+
+    for i in 0 to 20 loop
+      s_address <= std_logic_vector(signed(s_address)+1);
+      wait for cCLK_PER;
+      s_store(i) <= s_q;
+      wait for cCLK_PER;
+    end loop;
+
+    wait;  
+  end process;
+
+end behavioral;
