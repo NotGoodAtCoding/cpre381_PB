@@ -12,7 +12,6 @@ end tb_imem;
 architecture behavioral of tb_imem is
   constant cCLK_Per : time := gCLK_HPER * 2;
 
--- init mem module
   component mem is
     generic(
       depth_exp_of_2 	: integer := 10;
@@ -57,7 +56,6 @@ begin
     s_address <= "1111111111";
     wait for cCLK_PER;    
 
--- neato loop that makes this much easier to write
     for i in 0 to 20 loop
       s_address <= std_logic_vector(signed(s_address)+1);
       wait for cCLK_PER;

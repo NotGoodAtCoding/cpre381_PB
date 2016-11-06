@@ -116,7 +116,6 @@ component register_file
   );
 end component;
 
---TODO added by Curtis. We need this for the AND gate that connects to mux 8
 component and2
 	port (
 		i_A : in std_logic;
@@ -158,7 +157,6 @@ signal s_alu_32_o_F : std_logic_vector(31 downto 0);
 signal s_alu_32_o_zero : std_logic;
 signal s_n_bit_adder_0 : std_logic_vector(31 downto 0); 
 signal s_n_bit_adder_1 : std_logic_vector(31 downto 0);
---signal s_Full_ALU : std_logic_vector(31 downto 0); --TODO commented by Curtis. This was never used. Was it supposed to by the same signal as s_mux_7?
 
 -- signals for reg
 signal s_RData1 : std_logic_vector(31 downto 0);
@@ -196,7 +194,7 @@ signal s_mux_9 : std_logic_vector(31 downto 0);
 signal s_mux_10: std_logic_vector(31 downto 0);
 signal s_mux_11: std_logic_vector(4 downto 0);
 signal s_mux_12: std_logic_vector(31 downto 0);
-signal s_shiftedPC : std_logic_vector(9 downto 0); --TODO added by curtis
+signal s_shiftedPC : std_logic_vector(9 downto 0); 
 
 -- signal for branch control
 signal s_branch_control : std_logic;
@@ -208,16 +206,9 @@ signal s_alu_control : std_logic_vector(6 downto 0);
 signal s_dmem : std_logic_vector(31 downto 0);
 
 begin
-	s_clk <= clk;--TODO curtis added this.
-	s_shiftedPC <= "00" & s_PC(9 downto 2); --TODO added by curtis
+	s_clk <= clk;
+	s_shiftedPC <= "00" & s_PC(9 downto 2);
 
--- -- start mux
----- mux_0
-----  with s_branch_control select
-----    s_mux_0 <=
-----      s_mux_9 when '0',
-----      s_n_bit_adder_0  when '1',
-----      x"00000000" when others;
 -- mux_1
   with s_jr select
     s_mux_1 <=

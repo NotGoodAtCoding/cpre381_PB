@@ -48,16 +48,3 @@ depends: ./dependencies/*
 	vcom -reportprogress 300 -work work /home/rascheel/rascheel/cpre381/gitProject/381lab/B/src/dependencies/xor2.vhd
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
