@@ -1,0 +1,24 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity extender16to32 is
+	port(
+		i_A : in std_logic_vector(15 downto 0);
+		o_F : out std_logic_vector(31 downto 0));
+end extender16to32;
+
+
+architecture dataflow of extender16to32 is
+
+-- mostly taken from online examples
+begin
+	process (i_A)
+	begin
+	if i_A(15) = '1' then
+		o_F <= x"FFFF" & i_A;
+	else
+		o_F <= x"0000" & i_A;
+	end if;
+	end process;
+
+end dataflow;
