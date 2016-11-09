@@ -1,0 +1,90 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity memInputController is
+	port(
+		i_op : in std_logic_vector(2 downto 0);
+		i_byteAddress : in std_logic_vector(31 downto 0);
+		i_wData : in std_logic_vector(31 downto 0);
+		o_wordAddress : out std_logic_vector(13 downto 0);
+		o_byteEna : out std_logic_vector(3 downto 0);
+		o_wData : out std_logic_vector(31 downto 0);
+		o_wen : out std_logic);
+end memInputController;
+
+architecture dataflow of memInputController is
+
+signal s_sel : std_logic_vector(4 downto 0);
+
+begin
+
+s_sel <= i_op & i_byteAddress(1 downto 0); 
+o_wordAddress(13 downto 0) <= i_byteAddress(15 downto 2);
+
+--opcode format: 000 = sb
+--		 001 = sh
+--		 010 = sw
+--		 011 = lw
+--		 100 = lb
+--		 101 = lhu
+--		 110 = lbu
+--		 111 = lh
+
+
+with s_sel select
+	o_byteEna <= 
+		"0001" when "00000",--sb
+		"0010" when "00001",
+		"0100" when "00010",
+		"1000" when "00011",
+		"0011" when "00100",--sh
+		"0011" when "00101",
+		"1100" when "00110",
+		"1100" when "00111",
+		"1111" when "01000",--sw
+		"1111" when "01001",
+		"1111" when "01010",
+		"1111" when "01011",
+		"1111" when "01100",--lw
+		"1111" when "01101",
+		"1111" when "01110",
+		"1111" when "01111",
+		"0001" when "10000",--lb
+		"0010" when "10001",
+		"0100" when "10010",
+		"1000" when "10011",
+		"0011" when "10100",--lhu
+		"0011" when "10101",
+		"1100" when "10110",
+		"1100" when "10111",
+		"0001" when "11000",--lbu
+		"0010" when "11001",
+		"0100" when "11010",
+		"1000" when "11011",
+		"0011" when "11100",--lh
+		"0011" when "11101",
+		"1100" when "11110",
+		"1100" when "11111",
+		"0000" when others;
+
+with s_sel select
+	o_wData <=
+		i_wData                               when "00000",--sb
+		x"0000" & i_wData(7 downto 0) & x"00" when "00001",
+		x"00" & i_wData(7 downto 0) & x"0000" when "00010",
+		i_wData(7 downto 0) & x"000000"       when "00011",
+		i_wData                               when "00100",--sh
+		i_wData                               when "00101",
+		i_wData(15 downto 0) & x"0000"        when "00110",
+		i_wData(15 downto 0) & x"0000"        when "00111",
+		i_wData                               when others;--other commands
+
+
+with i_op select
+	o_wen <=
+		'1' when "010", --sw
+		'1' when "000", --sb
+		'1' when "001", --sh
+		'0' when others;
+
+end dataflow;
