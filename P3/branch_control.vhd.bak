@@ -25,12 +25,9 @@ s_rt <= i_op(20 downto 16);
 s_zero <= i_zero;
 s_lessThan <= i_lessThan;
 
-
---- NOT TESTED
-
 process(s_op, s_lessThan, s_zero, s_rt)
 	begin
-	if (s_op = "000100" and s_zero='1' ) then --beq
+	if (s_op = "000100" and s_zero='1' ) then--beq
 		s_branch <= '1';
 	elsif (s_op = "000001") then
 		if (s_rt = "00001" and (s_zero='1' or not s_lessThan='1')) then --bgez

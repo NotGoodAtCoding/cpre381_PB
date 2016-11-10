@@ -1,0 +1,24 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity memOutputController is
+  port(
+        i_byteEna : in std_logic_vector(3 downto 0);
+        i_data : in std_logic_vector(31 downto 0);
+        o_data : out std_logic_vector(31 downto 0));
+end memOutputController;
+
+architecture dataflow of memOutputController is
+begin
+with i_byteEna select
+        o_data <=
+                i_data                           when "0001",
+                x"000000" & i_data(15 downto 8)  when "0010",
+                x"000000" & i_data(23 downto 16) when "0100",
+                x"000000" & i_data(31 downto 24) when "1000",
+                i_data                           when "0011",
+                x"0000" & i_data(31 downto 16)   when "1100",
+                i_data                           when "1111",
+                x"00000000"                      when others;
+end dataflow;
+

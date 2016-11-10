@@ -490,6 +490,7 @@ s_shift_left_16 <= s_extender_16_32_unsigned_0(15 downto 0) & x"0000";
       o_RegDst      => s_RegDst,
       o_bitwise     => s_bitwise,
       o_jump        => s_jump,
+--      o_branch      => s_branch, NOT IMPLEMENTED
       o_memRead     => s_memRead,
       o_memtoReg    => s_memtoReg, 
       o_memWrite    => s_memWrite, 
